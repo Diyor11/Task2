@@ -8,7 +8,8 @@ const keys = require("../../config/keys");
 const verify = require("../../utilities/verify-token");
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
-const User = require("../../models/User");
+const User = require("../../models/User")
+const io = require("../../socket")
 
 router.get("/", (req, res) => {
   try {
@@ -29,7 +30,14 @@ router.get("/", (req, res) => {
           res.end(JSON.stringify({ message: "Failure" }));
           res.sendStatus(500);
         } else {
-          res.send(users);
+          if(jwtUser.isAdmin)
+            res.send(users);
+          else {
+            let filter = users.map(user => {
+              return {...user, name: '...'}
+            })
+            res.send(filter)
+          }
         }
       });
   } catch (err) {
@@ -67,6 +75,7 @@ router.post("/register", (req, res) => {
               const payload = {
                 id: user.id,
                 name: user.name,
+                isAdmin: user.isAdmin
               };
               // Sign token
               jwt.sign(
@@ -79,7 +88,7 @@ router.post("/register", (req, res) => {
                   if (err) {
                     console.log(err);
                   } else {
-                    req.io.sockets.emit("users", user.username);
+                    io.emit('users', user.username);
                     res.json({
                       success: true,
                       token: "Bearer " + token,
@@ -119,6 +128,7 @@ router.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
+          isAdmin: user.isAdmin
         };
         // Sign token
         jwt.sign(

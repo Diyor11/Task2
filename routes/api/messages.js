@@ -8,6 +8,7 @@ const verify = require('../../utilities/verify-token');
 const Message = require('../../models/Message');
 const Conversation = require('../../models/Conversation');
 const GlobalMessage = require('../../models/GlobalMessage');
+const io = require('../../socket');
 
 let jwtUser = null;
 
@@ -60,8 +61,7 @@ router.post('/global', (req, res) => {
         body: req.body.body,
     });
 
-    req.io.sockets.emit('messages', req.body.body);
-
+    io.emit('messages', req.body.body)
     message.save(err => {
         if (err) {
             console.log(err);
@@ -189,7 +189,7 @@ router.post('/', (req, res) => {
                     body: req.body.body,
                 });
 
-                req.io.sockets.emit('messages', req.body.body);
+                io.emit('messages', req.body.body)
 
                 message.save(err => {
                     if (err) {

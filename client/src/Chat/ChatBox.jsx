@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Paper from "@material-ui/core/Paper";
-import socketIOClient from "socket.io-client";
+import socket from '../Utilities/socket'
 import classnames from "classnames";
 import commonUtilites from "../Utilities/common";
 import {
@@ -103,8 +103,10 @@ const ChatBox = (props) => {
   }, [lastMessage, props.scope, props.conversationId]);
 
   useEffect(() => {
-    const socket = socketIOClient(process.env.REACT_APP_API_URL);
-    socket.on("messages", (data) => setLastMessage(data));
+    socket.on("messages", (data) => {
+      console.log('messages', data)
+      setLastMessage(data)
+    })
   }, []);
 
   const reloadMessages = () => {
@@ -134,6 +136,7 @@ const ChatBox = (props) => {
     } else {
       sendConversationMessage(props.user._id, newMessage).then((res) => {
         setNewMessage("");
+        reloadMessages()
       });
     }
   };

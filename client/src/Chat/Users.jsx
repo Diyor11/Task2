@@ -5,7 +5,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import socketIOClient from "socket.io-client";
+import socket from "../Utilities/socket";
+import { authenticationService } from '../Services/authenticationService'
 
 import { useGetUsers } from "../Services/userService";
 import commonUtilites from "../Utilities/common";
@@ -42,11 +43,11 @@ const Users = (props) => {
   }, [newUser]);
 
   useEffect(() => {
-    const socket = socketIOClient(process.env.REACT_APP_API_URL);
     socket.on("users", (data) => {
-      setNewUser(data);
+      setNewUser(data)
     });
   }, []);
+
 
   return (
     <List className={classes.list}>
