@@ -7,8 +7,10 @@
         "client-install": "npm install --prefix client",
         "start": "node server.js",
         "server": "nodemon server.js",
+        "socket": "nodemon socket",
         "client": "npm start --prefix client",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "test": "concurrently \"npm run server\" \"npm run socket\""
     },
     "author": "Dave Howson",
     "license": "MIT",

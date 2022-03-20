@@ -104,7 +104,6 @@ const ChatBox = (props) => {
 
   useEffect(() => {
     socket.on("messages", (data) => {
-      console.log('messages', data)
       setLastMessage(data)
     })
   }, []);
@@ -114,6 +113,8 @@ const ChatBox = (props) => {
       getGlobalMessages().then((res) => {
         setMessages(res);
       });
+    } else if(props.scope === '...'){
+      setMessages([]);
     } else if (props.scope !== null && props.conversationId !== null) {
       getConversationMessages(props.user._id).then((res) => setMessages(res));
     } else {

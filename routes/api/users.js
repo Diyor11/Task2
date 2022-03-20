@@ -93,6 +93,7 @@ router.post("/register", (req, res) => {
                       success: true,
                       token: "Bearer " + token,
                       name: user.name,
+                      isAdmin: user.isAdmin
                     });
                   }
                 }
@@ -144,6 +145,7 @@ router.post("/login", (req, res) => {
               name: user.name,
               username: user.username,
               userId: user._id,
+              isAdmin: user.isAdmin
             });
           }
         );

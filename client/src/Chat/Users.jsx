@@ -37,6 +37,7 @@ const Users = (props) => {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState(null);
   const getUsers = useGetUsers();
+  const isAdmin = authenticationService.currentUserValue.isAdmin
 
   useEffect(() => {
     getUsers().then((res) => setUsers(res));
@@ -58,8 +59,13 @@ const Users = (props) => {
               className={classes.listItem}
               key={u._id}
               onClick={() => {
-                props.setUser(u);
-                props.setScope(u.name);
+                if(isAdmin){
+                  props.setUser(u);
+                  props.setScope(u.name);
+                } else {
+                  props.setUser(null);
+                  props.setScope(u.name);
+                }
               }}
               button
             >

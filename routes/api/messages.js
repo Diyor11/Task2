@@ -49,7 +49,10 @@ router.get('/global', (req, res) => {
                 res.end(JSON.stringify({ message: 'Failure' }));
                 res.sendStatus(500);
             } else {
-                res.send(messages);
+                if(jwtUser.isAdmin)
+                    res.send(messages);
+                else 
+                    res.send([])
             }
         });
 });
@@ -101,7 +104,21 @@ router.get('/conversations', (req, res) => {
                 res.end(JSON.stringify({ message: 'Failure' }));
                 res.sendStatus(500);
             } else {
-                res.send(conversations);
+                if(jwtUser.isAdmin)
+                    res.send(conversations);
+                else {
+
+                    const reRecipientObj = arr => {
+                        return arr.map(e => {
+                            return {...e, name: '...', username: '...'}
+                        })
+                    }
+
+                    const filterConversations = conversations.map(e => {
+                        return {...e, recipientObj: reRecipientObj(e.recipientObj), lastMessage: ''}
+                    })
+                    res.send(filterConversations)
+                }
             }
         });
 });
@@ -150,7 +167,10 @@ router.get('/conversations/query', (req, res) => {
                 res.end(JSON.stringify({ message: 'Failure' }));
                 res.sendStatus(500);
             } else {
-                res.send(messages);
+                if(jwtUser.isAdmin)
+                    res.send(messages);
+                else 
+                    res.send([])
             }
         });
 });
